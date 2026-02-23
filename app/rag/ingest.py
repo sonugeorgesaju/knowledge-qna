@@ -2,6 +2,7 @@ import os
 import faiss
 import numpy as np
 from langchain_text_splitters import RecursiveCharacterTextSplitter
+from fastapi import HTTPException
 from app.config import DOCUMENTS_PATH, FAISS_INDEX_PATH
 from app.rag.embeddings import get_embedding
 
@@ -32,6 +33,9 @@ def save_index(index, chunks: list[str]):
 
 def run_ingest():
     chunks = load_documents()
+    if not chunks:
+        raise HTTPException(status_code=400, detail="No documents found. Add .txt files to the data/ folder.")
     index = build_index(chunks)
     save_index(index, chunks)
     return len(chunks)
+
