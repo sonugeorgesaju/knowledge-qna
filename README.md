@@ -72,6 +72,24 @@ To use Ollama instead of OpenAI, set `LLM_PROVIDER=ollama` and `EMBEDDING_PROVID
 uvicorn app.main:app --reload
 ```
 
+## Run with Docker
+
+```bash
+# 1. Build the image
+docker build -t knowledge-qna .
+
+# 2. Run the container
+docker run -d \
+  --name knowledge-qna \
+  -p 8000:8000 \
+  --env-file .env \
+  -v $(pwd)/data/documents:/app/data/documents \
+  -v $(pwd)/data/faiss_index:/app/data/faiss_index \
+  knowledge-qna
+```
+
+Documents and the FAISS index are mounted as volumes so data persists across container restarts.
+
 ## Usage
 
 **Ingest documents:**
